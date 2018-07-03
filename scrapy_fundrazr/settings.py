@@ -88,3 +88,11 @@ ROBOTSTXT_OBEY = True
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+#
+# DOWNLOADER_MIDDLEWARES = {
+#     'scrapy_crawlera.CrawleraMiddleware': 610
+# }
+#
+# CRAWLERA_ENABLED = True
+# CRAWLERA_APIKEY = 'apikey'
