@@ -9,6 +9,9 @@ import scrapy
 
 
 class ScrapyFundrazrItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    title = scrapy.Field()
+    amount_raised = scrapy.Field()
+    goal = scrapy.Field()
+    number_of_contributors = scrapy.Field()
+    story = scrapy.Field()
+

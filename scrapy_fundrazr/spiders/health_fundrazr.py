@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import scrapy
 
+from scrapy_fundrazr.items import ScrapyFundrazrItem
+
 
 class HealthFundrazrSpider(scrapy.Spider):
     name = 'health_fundrazr'
@@ -20,29 +22,21 @@ class HealthFundrazrSpider(scrapy.Spider):
             yield scrapy.Request(url=next_page_url, callback=self.parse)
 
     def parse_details(self, response):
+
+        item = ScrapyFundrazrItem()
         check = response.xpath("//div[contains(@class, 'stats-primary with-goal')]//span[contains(@class, "
                              "'stats-label hidden-phone')]/text()")
 
         if check:
 
-            yield {
-                'title': response.xpath("//div[contains(@id, 'campaign-title')]/descendant::text()").extract_first().strip(),
-                'amount_raised': response.xpath("//span[contains(@class,'stat')]/span[contains(@class, 'amount-raised')]/descendant::text()").extract_first().strip() + ' ' + response.xpath("//div[contains(@class, 'stats-primary with-goal')]/@title").extract_first(),
-                'goal': response.xpath("//div[contains(@class, 'stats-primary with-goal')]//span[contains(@class, 'stats-label hidden-phone')]/text()").extract()[1].strip()[3:][:-5],
-                'number_of_contributors': response.xpath("//div[contains(@class, 'stats-secondary with-goal')]//span[contains(@class, 'donation-count stat')]/text()").extract_first(),
-                'story': response.xpath("//div[contains(@id, 'full-story')]//p//text()").extract(),
-            }
-
+            item['amount_raised'] = response.xpath("//span[contains(@class,'stat')]/span[contains(@class, 'amount-raised')]/descendant::text()").extract_first().strip() + ' ' + response.xpath("//div[contains(@class, 'stats-primary with-goal')]/@title").extract_first()
+            item['goal'] = response.xpath("//div[contains(@class, 'stats-primary with-goal')]//span[contains(@class, 'stats-label hidden-phone')]/text()").extract()[1].strip()[3:][:-5]
         else:
+            item['amount_raised'] = response.xpath("//span[contains(@class,'stat')]/span[contains(@class, 'amount-raised')]/descendant::text()").extract_first().strip() + ' ' + response.xpath("//div[contains(@class, 'stats-primary')]/@title").extract_first()
+            item['goal'] = 'no goal amount set'
 
-            yield {
-                'title': response.xpath("//div[contains(@id, 'campaign-title')]/descendant::text()").extract_first().strip(),
-                'amount_raised': response.xpath("//span[contains(@class,'stat')]/span[contains(@class, 'amount-raised')]/descendant::text()").extract_first().strip() + ' ' + response.xpath("//div[contains(@class, 'stats-primary')]/@title").extract_first(),
-                'goal': 'no goal amount set',
-                'number_of_contributors': response.xpath("//div[contains(@class, 'stats-secondary with-goal')]//span[contains(@class, 'donation-count stat')]/text()").extract_first(),
-                'story': response.xpath("//div[contains(@id, 'full-story')]//p//text()").extract(),
-            }
+        item['title'] = response.xpath("//div[contains(@id, 'campaign-title')]/descendant::text()").extract_first().strip()
+        item['number_of_contributors'] = response.xpath("//div[contains(@class, 'stats-secondary with-goal')]//span[contains(@class, 'donation-count stat')]/text()").extract_first()
+        item['story'] = response.xpath("//div[contains(@id, 'full-story')]/p//text()").extract()
 
-
-# div.quote > span > a::attr(href)
-# 'h3.author-title::text'
+        yield item
