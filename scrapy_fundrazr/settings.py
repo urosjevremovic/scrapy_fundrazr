@@ -20,7 +20,6 @@ NEWSPIDER_MODULE = 'scrapy_fundrazr.spiders'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
-
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
 
@@ -64,9 +63,13 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'scrapy_fundrazr.pipelines.ScrapyFundrazrPipeline': 300,
-#}
+ITEM_PIPELINES = {
+    'scrapy_fundrazr.pipelines.MongoPipeline': 300,
+   # 'scrapy_fundrazr.pipelines.ScrapyFundrazrPipeline': 300,
+}
+
+MONGODB_DB = "scrapy_fundrazr_db"
+MONGO_URI = 'mongodb://localhost:27017'
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
@@ -96,3 +99,6 @@ ROBOTSTXT_OBEY = True
 #
 # CRAWLERA_ENABLED = True
 # CRAWLERA_APIKEY = 'apikey'
+#
+# DOWNLOAD_DELAY = 2
+# CONCURRENT_REQUESTS = 10
